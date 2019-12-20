@@ -1,119 +1,91 @@
 <template>
-  <div class="home">
-    <nav class="nav">
-      <div class="c-container">
-        <div class>
-          <img src="@/assets/logo.png" />
-          <a href>社会招聘</a>
-          <a href>校园招聘</a>
-          <a href>关于大疆</a>
-        </div>
-        <div>
-          <a href>登录</a>
-        </div>
-      </div>
-    </nav>
+  <!-- 每个组将有且只有一个根元素-->
 
-    <div class="main">
-      <div>
-        <p>未来无所不能</p>
-        <p>THE FUTURE OF POSSIBLE</p>
-      </div>
-    </div>
-    <footer>
-      <div class="c-container">
-        <p href>Copyright © 2019 CL 陈龙创新 版权所有</p>
-        <a href>cl官网</a>
-        <a href>cl赞助</a>
-        <a href>淘宝阿里</a>
-        <a href>腾讯云</a>
-        <a href>腾讯公众号</a>
-      </div>
-    </footer>
+  <div class="home">
+    <Header></Header>
+    <router-view></router-view>
+    <Footer></Footer>
   </div>
 </template>
 
+
+
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import Footer from './main/Footer'
+import Header from './main/Header'
 
 export default {
   name: "home",
-  components: {}
+  // 局部组件引入
+  components: {
+    Footer,Header
+  },
+  
 };
 </script>
 
 <style lang="scss" scoped>
+/* 设置home容器占满全屏 */
 .home {
   height: 100%;
+  background-color: #fff;
   .nav {
-    height: 70px;
-    background-color: #fff;
-    position: absolute;
+    position: fixed;
+    width: 100%;
     top: 0;
     left: 0;
-    width: 100%;
-    .c-container {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-    }
-    div {
-      display: flex;
-      align-items: center;
-      img {
-        width: 40px;
-        height: 40px;
-        margin-right: 34px;
-        cursor: pointer;
-      }
-      a {
-        color: #3b3e40;
-        font-size: 14px;
-        line-height: 70px;
-        margin-right: 34px;
-      }
-      a:hover {
-        color: #44a8f2;
-      }
-    }
   }
-  .main {
-    height: 100%;
-    background-image: url(https://we2.djicdn.com/hire/public/img/home-page-banner-2.d8f1ba7.png);
-    background-size: cover;
-    background-position: 50%;
-    text-align: center;
-    font-size: 35px;
-    color: #fff;
-    line-height: 1.5;
-    div {
-      padding: 200px;
-    }
-  }
-  footer {
-    width: 100%;
-    overflow: hidden;
-    background-color: #fff;
-    position: absolute;
-    bottom: 0;
+  .nav,
+  .footer {
     height: 60px;
+    background-color: #fff;
     .c-container {
       height: 100%;
       display: flex;
+      /* 设置flex排列方式 */
+      justify-content: space-between; /* 两端对齐中间平分 */
+      /*设置垂直方向居中显示*/
       align-items: center;
-      color: #979797;
-      font-size: 14px;
-      padding-left: 400px;
+      .left {
+        display: flex;
+        align-items: center;
+        img {
+          width: 34px;
+          height: 34px;
+          margin-right: 56px;
+          cursor: pointer;
+        }
+      }
     }
-    p {
-      margin-right: 34px;
-    }
+
     a {
-      color: #979797;
-      margin-right: 4px;
+      color: #232526;
+      font-size: 14px;
+      margin-right: 30px;
+    }
+
+    a:hover {
+      color: #44a8f2;
+    }
+
+    a:last-child {
+      margin-right: 0;
     }
   }
+  
+  // #footer {
+  //   height: 50px;
+  //   margin-top: -50px;
+  //   a {
+  //     font-size: 12px;
+  //     margin-right: 4px;
+  //     margin-left: 4px;
+  //     color: #707473;
+  //   }
+  //   p {
+  //     font-size: 12px;
+  //     margin-right: 26px;
+  //   }
+  // }
 }
 </style>

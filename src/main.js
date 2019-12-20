@@ -9,6 +9,16 @@ import 'element-ui/lib/theme-chalk/index.css'
 // 引入element-ui的组件库
 import elementUi from 'element-ui'
 
+//导入axios
+import Axios from 'axios'
+//将 axios 挂载到 vue实例属性上
+Vue.prototype.$api = Axios;
+
+// 配置aixos 的默认请求前缀
+Axios.defaults.baseURL = 'http://172.16.14.127:3000/'
+// 配置aixos 在每次请求时都带 session值
+Axios.defaults.withCredentials = true
+
 // vue的代表方法 设置vue的全局组将 以便于每次使用对应组件每次都能使用
 //将element-ui的组件 引入到vue中 使其变成全局组件
 Vue.use(elementUi)
