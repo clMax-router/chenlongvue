@@ -55,33 +55,33 @@ export default {
       //  console.log(this.$api)
       // 发送get请求
       // 配置axios 默认请求前缀
-      this.$api
-        .post("users/login", {
-          userName: this.username,
-          password: this.password
-        })
-        .then(res => {
-          //获取服务器返回的数据
-          // console.log(res.data)
-          if (res.data.code === 0) {
-            this.$notify({
-              title: "登录成功",
-              message: "正在进入主页",
-              type: "success",
-              duration: 1000,
-              onClose: () => {
-                // 登录成功跳转首页
-                this.$router.push("/");
-              }
-            });
-          } else {
-            this.$message.error({
-              message: res.data.msg,
-              duration: 1000,
-              center: "center"
-            });
-          }
-        });
+        this.$api
+          .post("users/login", {
+            userName: this.username,
+            password: this.password
+          })
+          .then(res => {
+            //获取服务器返回的数据
+            // console.log(res.data)
+            if (res.data.code === 0) {
+              this.$notify({
+                title: "登录成功",
+                message: "正在进入主页",
+                type: "success",
+                duration: 1000,
+                onClose: () => {
+                  // 登录成功跳转首页
+                  this.$router.push("/");
+                }
+              });
+            } else {
+              this.$message.error({
+                message: res.data.msg,
+                duration: 1000,
+                center: "center"
+              });
+            }
+          });
     },
     goReg() {
       this.$router.push("reg"); //两种参数 路径 || {path : 路径, name : 路由的名字 , params : 看不见的参数}

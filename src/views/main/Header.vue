@@ -5,7 +5,9 @@
     <div class="c-container">
       <!--  将c-container 设置为 flex容器  设置两个div 左右两端对齐-->
       <div class="left">
-        <img src="@/assets/logo.png" @click="goHome"/>
+        <router-link tag="span" to="/">
+          <img src="@/assets/logo.png"/>
+          </router-link>
         <router-link to="social" href>校园招聘</router-link>
         <a href>社会招聘</a>
         <a href>关于大疆</a>
@@ -56,9 +58,6 @@ export default {
           });
         }
       });
-    },
-    goHome(){
-        this.$router.push('/');
     }
   },
   computed: {
@@ -83,6 +82,7 @@ export default {
   left: 0;
   height: 60px;
   background-color: #fff;
+  z-index: 99999;
   .c-container {
     height: 100%;
     display: flex;
