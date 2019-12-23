@@ -15,7 +15,7 @@ import Axios from 'axios'
 Vue.prototype.$api = Axios;
 
 // 配置aixos 的默认请求前缀
-Axios.defaults.baseURL = 'http://172.16.8.20:3000/'
+Axios.defaults.baseURL = 'http://172.16.10.225:3000/'
 // 配置aixos 在每次请求时都带 session值
 Axios.defaults.withCredentials = true
 

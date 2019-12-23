@@ -3,35 +3,32 @@
     <div class="c-container">
       <div class="container">
         <div class="topInfo">
-          <div class="h2">汽车电子硬件工程师（毫米波雷达）</div>
+          <div class="h2">{{info.job_name}}</div>
           <div class="generalInfo">
-            <span>职位类别：</span>
-            <span>工作城市：</span>
-            <span>发布时间：</span>
+            <span>职位类别：{{ info.job_type}}</span>
+            <span>工作城市：{{info.job_city}}</span>
+            <span>发布时间：{{info.job_time}}</span>
           </div>
         </div>
         <div class="centerInfo">
           <div class="centerInfoTop">
             <p>工作职责</p>
-            <p>1. 负责通过邮件为DJI全球的农业无人机客户提供产品技术咨询服务；</p>
-            <p>2. 负责收集和分析用户声音，推动优化全球各区域现有产品政策及服务流程；</p>
-            <p>3. 负责与用户建立良好沟通关系，提升用户满意度；</p>
-            <p>4. 负责与其他的团队成员合作，共同完成部门目标。</p>
+            <p :key="item" v-for="item in info.job_info">{{item}}</p>
           </div>
           <div class="centerInfoBottom">
             <p>任职要求</p>
-            <p>1. 本科学历，英语能作为工作语言（听书读写能力优秀），有无人机、农业机械、家电行业服务经验优先；</p>
-            <p>2. 具备良好的服务意识，有意愿为用户提供优质的服务解决方案；</p>
-            <p>3. 具备良好的逻辑能力和沟通技巧，可以将复杂问题进行简单化表达；</p>
-            <p>4. 具备技术故障诊断技能，热衷学习和乐于迎接新的挑战。</p>
+            <p :key="item" v-for="item in info.job_ask">{{item}}</p>
           </div>
         </div>
         <div class="btn">
           <div class="btnNoMove">
-            <el-button class="collectionBtn">收藏职位</el-button>
+            <el-button :loading="loadingFlag" style="width:110px" class="collectionBtn" @click="showScope(info.pk)">
+              <span v-if="info.isColl">取消收藏</span>
+              <span v-else>收藏职位</span>
+            </el-button>
           </div>
           <div class="btnNoMove">
-            <el-button class="applyBtn">立刻申请</el-button>
+            <el-button style="width:110px" class="applyBtn">立刻申请</el-button>
           </div>
         </div>
       </div>
@@ -40,7 +37,58 @@
 </template>
 
 <script>
-export default {};
+export default {
+  beforeMount() {
+    this.$api
+      .get("job/info", {
+        params: {
+          id: this.$route.query.pk
+        }
+      })
+      .then(res => {
+        let data = res.data.data;
+        this.info = data;
+        this.info.job_info = data.job_info.split("/n");
+        this.info.job_ask = data.job_ask.split("/n");
+        this.info.job_type = this.$route.query.job_type;
+      });
+  },
+  data() {
+    return {
+      info: {},
+      loadingFlag: false
+    };
+  },
+  methods: {
+    showScope(id) {
+      this.loadingFlag = true
+      this.$api
+        .post("job/coll", {
+          id: id
+        })
+        .then(res => {
+          if (res.data.code === 0) {
+            let msg = "";
+            if (!this.info.isColl) {
+              msg = "收藏成功";
+            } else {
+              msg = "取消收藏";
+            }
+            this.$message.info({
+              message: msg
+            });
+            // 请求成功
+            this.info.isColl = !this.info.isColl;
+          } else {
+            this.$message.error({
+              message: res.data.msg
+            });
+          }
+          this.loadingFlag = false
+        });
+    }
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -51,7 +99,7 @@ export default {};
     min-height: 100%;
     padding-bottom: 26px;
     .container {
-      padding-right: 518px;
+      padding-right: 366px;
       padding-top: 20px;
       padding-left: 56px;
       padding-bottom: 60px;
@@ -73,6 +121,9 @@ export default {};
         }
         .generalInfo {
           font-size: 13px;
+          span {
+            margin-right: 100px;
+          }
         }
       }
       .centerInfo {
@@ -92,7 +143,7 @@ export default {};
       .btn {
         margin-top: 48px;
         .btnNoMove {
-          width: 110px;
+          width: 130px;
         }
         display: flex;
         .collectionBtn:hover {

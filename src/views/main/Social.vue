@@ -53,6 +53,7 @@
           <el-table
             :header-cell-style="{backgroundColor:'rgb(245,245,245)',color:'#616466',fontSize:'18px'}"
             class="result"
+            v-loading="isLoading"
             :data="jobs"
             style="width: 100%"
           >
@@ -65,13 +66,17 @@
             <el-table-column prop="job_time" label="发布时间"></el-table-column>
             <el-table-column label="收藏">
               <!-- scope 指向当前这一行的数据  <template slot-scope="scope">-->
-              <template>
-                <span class="el-icon-star-off" style="cursor: pointer;"></span>
+              <template slot-scope="scope">
+                <span
+                  @click="showScope(scope)"
+                  :class="scope.row.isColl?'el-icon-star-on':'el-icon-star-off'"
+                  style="cursor: pointer;"
+                ></span>
               </template>
             </el-table-column>
             <el-table-column label="操作">
-              <template>
-                <span style="color:#b4b4b4;cursor: pointer;">查看详情 ></span>
+              <template scope="scope">
+                <span @click="goPosition(scope)" style="color:#b4b4b4;cursor: pointer;">查看详情 ></span>
               </template>
             </el-table-column>
           </el-table>
@@ -138,7 +143,8 @@ export default {
           id: 7,
           city: "香港"
         }
-      ]
+      ],
+      isLoading: false //表格加载状态
     };
   },
   methods: {
@@ -150,28 +156,31 @@ export default {
     },
     hrefClick(str) {
       this.query = str;
-      this.fetchJobs()
+      this.fetchJobs();
     },
     // 获取 职位数组
     fetchJobs() {
       // 默认传递页码
       let params = {
         page: this.pagination.page || 1
+      };
+
+      if (this.keywrods.type) {
+        params.jobType = this.keywrods.type;
       }
 
-      if(this.keywrods.type){
-        params.jobType = this.keywrods.type
+      if (this.keywrods.city) {
+        params.jobCity = this.cityList.find(
+          item => item.id == this.keywrods.city
+        ).city;
       }
-
-      if(this.keywrods.city){
-        params.jobCity = this.cityList.find( item => item.id == this.keywrods.city).city
-      }
-
 
       //如果文本框有值
-      if(this.query){
-        params.jobName = this.query
+      if (this.query) {
+        params.jobName = this.query;
       }
+      // 还未发送请求之前，表格加载状态
+      this.isLoading = true;
 
       // axios的get传参
       this.$api
@@ -187,6 +196,8 @@ export default {
             page,
             total
           };
+          //请求完成
+          this.isLoading = false;
         });
     },
     jobTypeUpdate(id) {
@@ -202,27 +213,52 @@ export default {
     },
     serachJobs(id) {
       this.keywrods.type = id;
-      this.fetchJobs()
+      this.fetchJobs();
     },
     serachCitys(id) {
       this.keywrods.city = id;
-      this.fetchJobs()
+      this.fetchJobs();
     },
 
-    typeAll(){
+    typeAll() {
       this.keywrods.type = 0;
-      this.fetchJobs()
+      this.fetchJobs();
     },
 
-    cityAll(){
+    cityAll() {
       this.keywrods.city = 0;
-      this.fetchJobs()
+      this.fetchJobs();
     },
 
-    serachList(){
-      this.fetchJobs()
+    serachList() {
+      this.fetchJobs();
+    },
+    showScope(scope) {
+      this.$api
+        .post("job/coll", {
+          id: scope.row.pk
+        })
+        .then(res => {
+          if (res.data.code === 0) {
+            this.$message.info({
+              message: res.data.msg
+            });
+            // 请求成功
+            scope.row.isColl = !scope.row.isColl;
+          } else {
+            this.$message.error({
+              message: res.data.msg
+            });
+          }
+        });
+    },
+    goPosition(scope) {
+      this.$router.push({
+        path: "/position",
+        query: { pk: scope.row.pk ,job_type:this.jobTypeUpdate(scope.row.job_type)}
+      });
     }
-  },
+  }
   // 定义一个过滤器
 
   // filters: {
@@ -232,7 +268,6 @@ export default {
   //     return ;
   //   }
   // },
-  
 };
 </script>
 

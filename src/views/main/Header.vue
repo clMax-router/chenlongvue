@@ -82,7 +82,7 @@ export default {
   left: 0;
   height: 60px;
   background-color: #fff;
-  z-index: 99999;
+  z-index: 999;
   .c-container {
     height: 100%;
     display: flex;
